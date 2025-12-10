@@ -1,0 +1,23 @@
+﻿@model yeniWeb.Models.Hizmet
+
+@{
+    ViewData["Title"] = "Hizmet Sil";
+}
+
+<h2>Hizmet Sil</h2>
+
+<h4>@Model.HizmetAdi hizmetini silmek istediğinize emin misiniz?</h4>
+
+<dl class="row">
+    <dt class="col-sm-2">Salon</dt>
+    <dd class="col-sm-10">@Model.Salon?.SalonAdi</dd>
+
+    <dt class="col-sm-2">Fiyat</dt>
+    <dd class="col-sm-10">@Model.Fiyat</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="HizmetId" />
+    <button type="submit" class="btn btn-danger">Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

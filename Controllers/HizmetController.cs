@@ -24,13 +24,13 @@ namespace yeniWeb.Controllers
             ViewBag.SalonId = new SelectList(salonlar, "SalonId", "SalonAdi", selectedSalon);
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var hizmetler = await _context.Hizmetler
-                .Include(h => h.Salon)
-                .ToListAsync();
-            return View(hizmetler);
-        }
+            public async Task<IActionResult> Index()
+            {
+                var hizmetler = await _context.Hizmetler
+                    .Include(h => h.Salon)
+                    .ToListAsync();
+                return View(hizmetler);
+            }
 
         public async Task<IActionResult> Details(int id)
         {
@@ -57,6 +57,18 @@ namespace yeniWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // HATALARI TOPLA
+                var errors = ModelState
+                    .SelectMany(kvp => kvp.Value.Errors
+                        .Select(e => $"{kvp.Key}: {e.ErrorMessage}"))
+                    .ToList();
+
+                System.Diagnostics.Debug.WriteLine("MODELSTATE ERRORS:");
+                foreach (var err in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine(err);
+                }
+
                 PopulateSalonDropDownList(hizmet.SalonId);
                 return View(hizmet);
             }
@@ -144,4 +156,3 @@ namespace yeniWeb.Controllers
     }
 }
 
-s

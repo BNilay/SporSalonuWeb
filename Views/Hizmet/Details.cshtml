@@ -1,0 +1,25 @@
+﻿@model yeniWeb.Models.Hizmet
+
+@{
+    ViewData["Title"] = "Hizmet Detay";
+}
+
+<h2>Hizmet Detay</h2>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">Hizmet Adı</dt>
+    <dd class="col-sm-10">@Model.HizmetAdi</dd>
+
+    <dt class="col-sm-2">Fiyat</dt>
+    <dd class="col-sm-10">@Model.Fiyat</dd>
+
+    <dt class="col-sm-2">Süre (dk)</dt>
+    <dd class="col-sm-10">@Model.HizmetSuresi</dd>
+
+    <dt class="col-sm-2">Salon</dt>
+    <dd class="col-sm-10">@Model.Salon?.SalonAdi</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.HizmetId" class="btn btn-warning">Düzenle</a>
+<a asp-action="Index" class="btn btn-secondary">Geri</a>
