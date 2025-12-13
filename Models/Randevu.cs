@@ -27,10 +27,10 @@ namespace yeniWeb.Models
         public Hizmet Hizmet { get; set; } = null!;
 
         [Required]
-        public DateTime RandevuTarihi { get; set; }  
+        public DateTime RandevuTarihi { get; set; }
 
-        [Range(1,5)]
-        public int SureDakika { get; set; }  // saat
+        [Range(1, 600, ErrorMessage = "Randevu süresi 1 ile 600 arasında olmalıdır.")]
+        public int SureDakika { get; set; }  // dk
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Ucret { get; set; }  
@@ -40,4 +40,7 @@ namespace yeniWeb.Models
 
         public DateTime OlusturulmaTarihi { get; set; } = DateTime.Now;
     }
+
+    
+
 }

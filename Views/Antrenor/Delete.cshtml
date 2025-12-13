@@ -1,0 +1,28 @@
+﻿@model yeniWeb.Models.Antrenor
+
+@{
+    ViewData["Title"] = "Antrenör Sil";
+}
+
+<h2>Antrenör Sil</h2>
+
+<div class="alert alert-warning">
+    Bu antrenörü silmek istediğinize emin misiniz?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Ad Soyad</dt>
+    <dd class="col-sm-9">@Model.AdSoyad</dd>
+
+    <dt class="col-sm-3">Uzmanlık</dt>
+    <dd class="col-sm-9">@Model.UzmanlikAlanlari</dd>
+
+    <dt class="col-sm-3">Salon</dt>
+    <dd class="col-sm-9">@Model.Salon?.SalonAdi</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+</form>
