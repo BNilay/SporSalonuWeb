@@ -1,0 +1,89 @@
+﻿@model IEnumerable<yeniWeb.Models.AntrenorMusaitlik>
+
+@{
+    ViewData["Title"] = "Müsaitlikler";
+    var a = ViewBag.Antrenor as yeniWeb.Models.Antrenor;
+
+    string GunTr(DayOfWeek d) => d switch
+    {
+        DayOfWeek.Monday => "Pazartesi",
+        DayOfWeek.Tuesday => "Salı",
+        DayOfWeek.Wednesday => "Çarşamba",
+        DayOfWeek.Thursday => "Perşembe",
+        DayOfWeek.Friday => "Cuma",
+        DayOfWeek.Saturday => "Cumartesi",
+        _ => "Pazar"
+    };
+}
+
+<h2>Müsaitlikler</h2>
+
+@if (a != null)
+{
+    <div class="mb-2">
+        <b>Antrenör:</b> @a.AdSoyad
+        @if (a.Salon != null)
+        {
+            <span> | <b>Salon:</b> @a.Salon.SalonAdi</span>
+        }
+    </div>
+
+    <div class="mb-3">
+        <a class="btn btn-primary"
+           asp-action="Create"
+           asp-route-antrenorId="@a.Id">
+            Yeni Müsaitlik
+        </a>
+
+        <a class="btn btn-secondary"
+           asp-controller="Antrenor"
+           asp-action="Index">
+            Antrenörlere Geri
+        </a>
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Gün</th>
+            <th>Başlangıç</th>
+            <th>Bitiş</th>
+            <th style="width: 200px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">
+                    Henüz müsaitlik eklenmemiş.
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td>@GunTr(m.Gun)</td>
+                    <td>@m.BaslangicSaati.ToString(@"hh\:mm")</td>
+                    <td>@m.BitisSaati.ToString(@"hh\:mm")</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm"
+                           asp-action="Edit"
+                           asp-route-id="@m.Id">
+                            Düzenle
+                        </a>
+
+                        <a class="btn btn-danger btn-sm"
+                           asp-action="Delete"
+                           asp-route-id="@m.Id">
+                            Sil
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

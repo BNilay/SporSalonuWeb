@@ -230,5 +230,8 @@ namespace yeniWeb.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+
+
     }
 }

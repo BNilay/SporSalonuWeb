@@ -27,9 +27,26 @@
                 <td>@a.UzmanlikAlanlari</td>
                 <td>@a.Salon?.SalonAdi</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@a.Id" class="btn btn-warning btn-sm">Düzenle</a>
-                    <a asp-action="Delete" asp-route-id="@a.Id" class="btn btn-danger btn-sm">Sil</a>
+                    <a asp-action="Edit"
+                       asp-route-id="@a.Id"
+                       class="btn btn-warning btn-sm">
+                        Düzenle
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@a.Id"
+                       class="btn btn-danger btn-sm">
+                        Sil
+                    </a>
+
+                    <a asp-controller="AntrenorMusaitlik"
+                       asp-action="Index"
+                       asp-route-antrenorId="@a.Id"
+                       class="btn btn-secondary btn-sm">
+                        Müsaitlik
+                    </a>
                 </td>
+
             </tr>
         }
     </tbody>
