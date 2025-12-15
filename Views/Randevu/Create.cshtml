@@ -1,0 +1,62 @@
+﻿@model yeniWeb.Models.ViewModels.RandevuFormVM
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Yeni Randevu";
+}
+
+<h2>Yeni Randevu</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+
+    <div class="form-group mb-2">
+        <label>Antrenör</label>
+        <select asp-for="AntrenorId"
+                asp-items="(SelectList)ViewBag.Antrenorler"
+                class="form-control">
+            <option value="">Antrenör seçiniz</option>
+        </select>
+        <span asp-validation-for="AntrenorId" class="text-danger"></span>
+    </div>
+
+    
+    <div class="form-group mb-2">
+        <label>Hizmet</label>
+        <select asp-for="HizmetId"
+                asp-items="(SelectList)ViewBag.Hizmetler"
+                class="form-control">
+            <option value="">Hizmet seçiniz</option>
+        </select>
+        <span asp-validation-for="HizmetId" class="text-danger"></span>
+    </div>
+
+    
+    <div class="form-group mb-2">
+        <label>Tarih</label>
+        <input asp-for="Tarih" type="date" class="form-control" />
+        <span asp-validation-for="Tarih" class="text-danger"></span>
+    </div>
+
+    
+    <div class="form-group mb-3">
+        <label>Başlangıç Saati</label>
+        <input asp-for="BaslangicSaati" type="time" class="form-control" />
+        <span asp-validation-for="BaslangicSaati" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Kaydet
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Geri
+    </a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

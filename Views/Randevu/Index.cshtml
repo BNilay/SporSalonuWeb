@@ -1,0 +1,95 @@
+﻿@model IEnumerable<yeniWeb.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Randevular";
+
+    string DurumTr(yeniWeb.Models.RandevuDurumu d) => d switch
+    {
+        yeniWeb.Models.RandevuDurumu.Beklemede => "Beklemede",
+        yeniWeb.Models.RandevuDurumu.Onaylandi => "Onaylandı",
+        _ => "İptal"
+    };
+}
+
+<h2>Randevular</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Randevu</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Üye</th>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
+            <th>Tarih</th>
+            <th>Saat</th>
+            <th>Süre (dk)</th>
+            <th>Ücret</th>
+            <th>Durum</th>
+            <th style="width:160px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="9" class="text-center">
+                    Henüz randevu yok.
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var r in Model)
+            {
+                var bitis = r.RandevuTarihi.AddMinutes(r.SureDakika);
+
+                <tr>
+                    <td>@r.Uye?.AdSoyad</td>
+                    <td>@r.Antrenor?.AdSoyad</td>
+                    <td>@r.Hizmet?.HizmetAdi</td>
+                    <td>@r.RandevuTarihi.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        @r.RandevuTarihi.ToString("HH:mm")
+                        -
+                        @bitis.ToString("HH:mm")
+                    </td>
+                    <td>@r.SureDakika</td>
+                    <td>@r.Ucret ₺</td>
+                    <td>@DurumTr(r.Durum)</td>
+                    <td>
+                        <a asp-action="Delete"
+                           asp-route-id="@r.Id"
+                           class="btn btn-danger btn-sm">
+                            Sil
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge
+        @(r.Durum == RandevuDurumu.Onaylandi ? "bg-success" :
+          r.Durum == RandevuDurumu.Iptal ? "bg-danger" : "bg-warning")">
+                            @r.Durum
+                        </span>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <form asp-action="Onayla" asp-route-id="@r.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-success btn-sm">Onayla</button>
+                            </form>
+
+                            <form asp-action="AdminIptal" asp-route-id="@r.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-warning btn-sm">İptal</button>
+                            </form>
+                        }
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

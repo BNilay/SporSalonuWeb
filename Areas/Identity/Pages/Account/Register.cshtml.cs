@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using yeniWeb.Data;
+using yeniWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,19 +13,19 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using yeniWeb.Models;
 
 namespace yeniWeb.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private readonly ApplicationDbContext _context;
+
         private readonly SignInManager<UserDetails> _signInManager;
         private readonly UserManager<UserDetails> _userManager;
         private readonly IUserStore<UserDetails> _userStore;
@@ -36,7 +38,8 @@ namespace yeniWeb.Areas.Identity.Pages.Account
             IUserStore<UserDetails> userStore,
             SignInManager<UserDetails> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context) 
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace yeniWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context; 
         }
 
         [BindProperty]
@@ -94,8 +98,6 @@ namespace yeniWeb.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
-                // 🔹 EKLEDİĞİMİZ KISIM: Formdan gelen Ad/Soyad'ı kullanıcıya yaz
                 user.UserAd = Input.Ad;
                 user.UserSoyad = Input.Soyad;
 
@@ -107,6 +109,17 @@ namespace yeniWeb.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // ✅ Uyeler tablosuna otomatik kayıt
+                    var uye = new Uye
+                    {
+                        UserId = user.Id,
+                        AdSoyad = $"{Input.Ad} {Input.Soyad}",
+                        Telefon = null
+                    };
+
+                    _context.Uyeler.Add(uye);
+                    await _context.SaveChangesAsync();
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -136,9 +149,7 @@ namespace yeniWeb.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
-            return Page();
+    return Page();
         }
 
         private UserDetails CreateUser()

@@ -39,7 +39,7 @@ async Task CreateRolesAndAdminAsync(WebApplication app)
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserDetails>>();
 
-    
+
     string[] roleNames = { "Admin", "User" };
 
     foreach (var roleName in roleNames)
@@ -76,7 +76,7 @@ async Task CreateRolesAndAdminAsync(WebApplication app)
         }
     }
 
-   
+
     if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
     {
         await userManager.AddToRoleAsync(adminUser, "Admin");

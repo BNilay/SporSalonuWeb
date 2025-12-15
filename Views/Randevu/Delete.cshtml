@@ -1,0 +1,43 @@
+﻿@model yeniWeb.Models.Randevu
+
+@{
+    ViewData["Title"] = "Randevu Sil";
+}
+
+<h2>Randevu Sil</h2>
+
+<div class="alert alert-danger">
+    Bu randevuyu silmek istediğinize emin misiniz?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Antrenör</dt>
+    <dd class="col-sm-9">@Model.Antrenor?.AdSoyad</dd>
+
+    <dt class="col-sm-3">Hizmet</dt>
+    <dd class="col-sm-9">@Model.Hizmet?.HizmetAdi</dd>
+
+    <dt class="col-sm-3">Tarih</dt>
+    <dd class="col-sm-9">
+        @Model.RandevuTarihi.ToString("dd.MM.yyyy HH:mm")
+    </dd>
+
+    <dt class="col-sm-3">Süre</dt>
+    <dd class="col-sm-9">@Model.SureDakika dk</dd>
+
+    <dt class="col-sm-3">Durum</dt>
+    <dd class="col-sm-9">@Model.Durum</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Evet, Sil
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Vazgeç
+    </a>
+</form>
