@@ -4,10 +4,6 @@ using yeniWeb.Data;
 using yeniWeb.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// ------------------------------------------------------
-// DATABASE BAĞLANTISI
-// ------------------------------------------------------
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -16,21 +12,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// ------------------------------------------------------
-// IDENTITY + ROLE SİSTEMİ
-// ------------------------------------------------------
 builder.Services.AddDefaultIdentity<UserDetails>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-.AddRoles<IdentityRole>()                  // <-- Roller aktif
+.AddRoles<IdentityRole>()                  
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// ------------------------------------------------------
+
 
 async Task CreateRolesAndAdminAsync(WebApplication app)
 {
@@ -52,7 +46,7 @@ async Task CreateRolesAndAdminAsync(WebApplication app)
 
     // --- Admin kullanıcı bilgileri ---
     string adminEmail = "b231210376@sakarya.edu.tr";
-    string adminPassword = "Sau123!";  // Şifre kurallara uygun olmalı
+    string adminPassword = "Sau123!"; 
 
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -110,5 +104,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapControllers();
+
+
 
 app.Run();

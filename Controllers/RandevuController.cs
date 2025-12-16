@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using yeniWeb.Data;
 using yeniWeb.Models;
 using yeniWeb.Models.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-
 
 namespace yeniWeb.Controllers
 {
@@ -15,10 +14,11 @@ namespace yeniWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<UserDetails> _userManager;
-        public RandevuController(ApplicationDbContext context , UserManager<UserDetails> userManager)
+
+        public RandevuController(ApplicationDbContext context, UserManager<UserDetails> userManager)
         {
             _context = context;
-            _userManager= userManager;
+            _userManager = userManager;
         }
 
         private async Task PopulateDropDowns(int? selectedUyeId = null, int? selectedAntrenorId = null, int? selectedHizmetId = null)
@@ -39,33 +39,44 @@ namespace yeniWeb.Controllers
             ViewBag.Hizmetler = new SelectList(hizmetler, "HizmetId", "HizmetAdi", selectedHizmetId);
         }
 
-       
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Admin"))
+            {
+                var all = await _context.Randevular
+                    .Include(r => r.Uye)
+                    .Include(r => r.Antrenor)
+                    .Include(r => r.Hizmet)
+                    .OrderByDescending(r => r.RandevuTarihi)
+                    .ToListAsync();
+
+                return View(all);
+            }
+
             var userId = _userManager.GetUserId(User);
             var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
             if (uye == null) return Forbid();
 
             var list = await _context.Randevular
-            .Where(r => r.UyeId == uye.Id)   // ✅ sadece kendisi
-            .Include(r => r.Antrenor)
-            .Include(r => r.Hizmet)
-            .OrderByDescending(r => r.RandevuTarihi)
-            .ToListAsync();
+                .Where(r => r.UyeId == uye.Id)
+                .Include(r => r.Antrenor)
+                .Include(r => r.Hizmet)
+                .OrderByDescending(r => r.RandevuTarihi)
+                .ToListAsync();
 
             return View(list);
         }
 
+       
         public async Task<IActionResult> Create()
         {
-            // giriş yapan user id
+            if (User.IsInRole("Admin"))
+                return Forbid(); 
+
             var userId = _userManager.GetUserId(User);
-
-            // Uyeler tablosundaki karşılığı
             var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (uye == null) return Forbid(); // veya NotFound()
+            if (uye == null) return Forbid();
 
-            // Üye dropdown yok artık
             await PopulateDropDowns(selectedUyeId: null, selectedAntrenorId: null, selectedHizmetId: null);
 
             var vm = new RandevuFormVM
@@ -77,11 +88,13 @@ namespace yeniWeb.Controllers
             return View(vm);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RandevuFormVM vm)
         {
+            if (User.IsInRole("Admin"))
+                return Forbid(); 
+
             var userId = _userManager.GetUserId(User);
             var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
             if (uye == null) return Forbid();
@@ -91,7 +104,6 @@ namespace yeniWeb.Controllers
             if (!ModelState.IsValid)
                 return View(vm);
 
-            
             var hizmet = await _context.Hizmetler.FirstOrDefaultAsync(h => h.HizmetId == vm.HizmetId);
             if (hizmet == null)
             {
@@ -99,14 +111,14 @@ namespace yeniWeb.Controllers
                 return View(vm);
             }
 
-            int sureDakika = hizmet.HizmetSuresi;     // senin Hizmet modelinde bu alan var
-            decimal ucret = hizmet.Fiyat;             // Fiyat alanı var
+            int sureDakika = hizmet.HizmetSuresi;
+            decimal ucret = hizmet.Fiyat;
 
-          
             var baslangic = vm.Tarih.Date.Add(vm.BaslangicSaati);
             var bitis = baslangic.AddMinutes(sureDakika);
             var gun = baslangic.DayOfWeek;
 
+           
             bool uygunMusaitlikVar = await _context.AntrenorMusaitlikler.AnyAsync(m =>
                 m.AntrenorId == vm.AntrenorId &&
                 m.Gun == gun &&
@@ -120,7 +132,6 @@ namespace yeniWeb.Controllers
                 return View(vm);
             }
 
-            // 2) ÇAKIŞMA KONTROLÜ: aynı antrenörde başka randevu var mı?
             bool cakisma = await _context.Randevular.AnyAsync(r =>
                 r.AntrenorId == vm.AntrenorId &&
                 r.Durum != RandevuDurumu.Iptal &&
@@ -152,76 +163,78 @@ namespace yeniWeb.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
+        
+        // -----------------------------
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = _userManager.GetUserId(User);
-            var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (uye == null) return Forbid();
-
             var r = await _context.Randevular
+                .Include(x => x.Uye)
                 .Include(x => x.Antrenor)
                 .Include(x => x.Hizmet)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (r == null) return NotFound();
-            
-            var isAdmin = User.IsInRole("Admin");
-            if (!isAdmin && r.UyeId != uye.Id) return Forbid();
+
+            if (!User.IsInRole("Admin"))
+            {
+                var userId = _userManager.GetUserId(User);
+                var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
+                if (uye == null) return Forbid();
+
+                if (r.UyeId != uye.Id) return Forbid();
+            }
 
             return View(r);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userId = _userManager.GetUserId(User);
-            var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (uye == null) return Forbid();
-
             var r = await _context.Randevular.FirstOrDefaultAsync(x => x.Id == id);
             if (r == null) return NotFound();
 
-            var isAdmin = User.IsInRole("Admin");
-            if (!isAdmin && r.UyeId != uye.Id) return Forbid();
+            if (!User.IsInRole("Admin"))
+            {
+                var userId = _userManager.GetUserId(User);
+                var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.UserId == userId);
+                if (uye == null) return Forbid();
+
+                if (r.UyeId != uye.Id) return Forbid();
+            }
 
             _context.Randevular.Remove(r);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Onayla(int id) 
+        public async Task<IActionResult> Onayla(int id)
         {
             var randevu = await _context.Randevular.FirstOrDefaultAsync(r => r.Id == id);
-            if (randevu == null)
-                return NotFound();
+            if (randevu == null) return NotFound();
 
             randevu.Durum = RandevuDurumu.Onaylandi;
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
-        
-        [Authorize(Roles ="Admin")]
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminIptal(int id)
         {
             var randevu = await _context.Randevular.FirstOrDefaultAsync(r => r.Id == id);
-            if (randevu == null)
-                return NotFound();
+            if (randevu == null) return NotFound();
 
             randevu.Durum = RandevuDurumu.Iptal;
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
-        }   
-
+        }
     }
 }
-
