@@ -1,0 +1,68 @@
+﻿@model yeniWeb.Models.ViewModels.PlanRequestVm
+
+<h2>AI Plan Oluştur (Gemini)</h2>
+
+<form asp-action="Plan" method="post">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label>Yaş</label>
+        <input asp-for="Age" />
+        <span asp-validation-for="Age"></span>
+    </div>
+
+    <div>
+        <label>Cinsiyet</label>
+        <input asp-for="Sex" />
+        <span asp-validation-for="Sex"></span>
+    </div>
+
+    <div>
+        <label>Boy (cm)</label>
+        <input asp-for="HeightCm" />
+        <span asp-validation-for="HeightCm"></span>
+    </div>
+
+    <div>
+        <label>Kilo (kg)</label>
+        <input asp-for="WeightKg" />
+        <span asp-validation-for="WeightKg"></span>
+    </div>
+
+    <div>
+        <label>Hedef</label>
+        <input asp-for="Goal" />
+        <span asp-validation-for="Goal"></span>
+    </div>
+
+    <div>
+        <label>Haftada gün</label>
+        <input asp-for="DaysPerWeek" />
+        <span asp-validation-for="DaysPerWeek"></span>
+    </div>
+
+    <div>
+        <label>Ekipman</label>
+        <input asp-for="Equipment" />
+    </div>
+
+    <div>
+        <label>Notlar</label>
+        <textarea asp-for="Notes"></textarea>
+    </div>
+
+    <button id="btnSubmit" type="submit">Planı Oluştur</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const form = document.querySelector("form");
+        const btn = document.getElementById("btnSubmit");
+        form.addEventListener("submit", function () {
+            btn.disabled = true;
+            btn.innerText = "Oluşturuluyor...";
+        });
+    </script>
+}

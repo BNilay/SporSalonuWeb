@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using yeniWeb.Data;
 using yeniWeb.Models;
+using yeniWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -16,15 +18,14 @@ builder.Services.AddDefaultIdentity<UserDetails>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-.AddRoles<IdentityRole>()                  
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
+
+builder.Services.AddHttpClient<GeminiPlanService>();
 
 var app = builder.Build();
-
-
 
 async Task CreateRolesAndAdminAsync(WebApplication app)
 {
@@ -33,20 +34,16 @@ async Task CreateRolesAndAdminAsync(WebApplication app)
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserDetails>>();
 
-
     string[] roleNames = { "Admin", "User" };
 
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
-        {
             await roleManager.CreateAsync(new IdentityRole(roleName));
-        }
     }
 
-    // --- Admin kullanıcı bilgileri ---
     string adminEmail = "b231210376@sakarya.edu.tr";
-    string adminPassword = "Sau123!"; 
+    string adminPassword = "Sau123!";
 
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -70,16 +67,11 @@ async Task CreateRolesAndAdminAsync(WebApplication app)
         }
     }
 
-
     if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
-    {
         await userManager.AddToRoleAsync(adminUser, "Admin");
-    }
 }
 
-
 await CreateRolesAndAdminAsync(app);
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -104,9 +96,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-
-app.MapControllers();
-
-
 
 app.Run();

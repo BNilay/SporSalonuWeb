@@ -1,0 +1,26 @@
+﻿@{
+    var error = ViewBag.Error as string;
+    var resultJson = ViewBag.ResultJson as string;
+}
+
+<h2>AI Sonuç</h2>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div style="padding:10px;border:1px solid red;">
+        <b>Hata:</b> @error
+    </div>
+    <div style="margin-top:10px;">
+        <a asp-action="Plan">Geri</a>
+    </div>
+}
+else
+{
+    <pre style="white-space:pre-wrap; padding:10px; border:1px solid #ccc;">
+        @resultJson
+        </pre>
+
+    <div style="margin-top:10px;">
+        <a asp-action="Plan">Geri</a>
+    </div>
+}
