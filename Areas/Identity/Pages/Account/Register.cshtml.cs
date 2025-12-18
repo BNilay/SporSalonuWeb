@@ -39,7 +39,7 @@ namespace yeniWeb.Areas.Identity.Pages.Account
             SignInManager<UserDetails> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context) 
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,7 +47,7 @@ namespace yeniWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _context = context; 
+            _context = context;
         }
 
         [BindProperty]
@@ -110,6 +110,9 @@ namespace yeniWeb.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // ✅ Kayıt olan herkese otomatik User rolü ata
+                    await _userManager.AddToRoleAsync(user, "User");
+
                     // ✅ Uyeler tablosuna otomatik kayıt
                     var uye = new Uye
                     {
@@ -149,7 +152,8 @@ namespace yeniWeb.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-    return Page();
+
+            return Page();
         }
 
         private UserDetails CreateUser()

@@ -10,6 +10,8 @@ using yeniWeb.Models.ViewModels;
 namespace yeniWeb.Controllers
 {
     [Authorize]
+   
+
     public class RandevuController : Controller
     {
         private readonly ApplicationDbContext _context;

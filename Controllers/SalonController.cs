@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using yeniWeb.Models;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace yeniWeb.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SalonController : Controller
     {
         private readonly ApplicationDbContext _context;

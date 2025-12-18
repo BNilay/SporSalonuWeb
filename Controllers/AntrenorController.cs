@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
@@ -8,6 +9,7 @@ using yeniWeb.Models.ViewModels;
 
 namespace yeniWeb.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AntrenorController : Controller
     {
         private readonly ApplicationDbContext _context;

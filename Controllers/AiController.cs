@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using yeniWeb.Models.ViewModels;
 using yeniWeb.Services;
 
 namespace yeniWeb.Controllers
 {
+   
+
     public class AiController : Controller
     {
         private readonly GeminiPlanService _geminiPlanService;

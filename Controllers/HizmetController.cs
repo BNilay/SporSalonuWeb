@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using yeniWeb.Data;
 using yeniWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace yeniWeb.Controllers
 
 {
+    [Authorize(Roles = "Admin")]
     public class HizmetController : Controller
     {
         private readonly ApplicationDbContext _context;

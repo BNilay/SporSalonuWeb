@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 namespace yeniWeb.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/uyeler")]
     public class UyeApiController : Controller
