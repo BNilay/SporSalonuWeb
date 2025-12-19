@@ -215,13 +215,24 @@ namespace yeniWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Antrenöre bağlı randevu var mı?
+            bool randevuVarMi = await _context.Randevular
+                .AnyAsync(r => r.AntrenorId == id);
+
+            if (randevuVarMi)
+            {
+                TempData["Error"] = "Bu antrenörün kayıtlı randevuları bulunmaktadır. Önce randevuları silmelisiniz.";
+                
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             var antrenor = await _context.Antrenorler
                 .Include(a => a.AntrenorHizmetler)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (antrenor == null) return NotFound();
+            if (antrenor == null)
+                return NotFound();
 
-            // önce ilişkiyi sil
             if (antrenor.AntrenorHizmetler != null && antrenor.AntrenorHizmetler.Any())
             {
                 _context.AntrenorHizmetler.RemoveRange(antrenor.AntrenorHizmetler);
@@ -232,6 +243,7 @@ namespace yeniWeb.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
 
 
 

@@ -139,22 +139,28 @@ namespace yeniWeb.Controllers
 
             return View(hizmet);
         }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hizmet = await _context.Hizmetler.FindAsync(id);
-            if (hizmet == null)
+            var randevuVarMi = await _context.Randevular
+                .AnyAsync(r => r.HizmetId == id);
+
+            if (randevuVarMi)
             {
-                return NotFound();
+                TempData["Error"] = "Bu hizmete bağlı randevular bulunmaktadır. Önce randevuları silmelisiniz.";
+                return RedirectToAction(nameof(Delete), new { id });
             }
+
+            var hizmet = await _context.Hizmetler.FindAsync(id);
+            if (hizmet == null) return NotFound();
 
             _context.Hizmetler.Remove(hizmet);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
 
+            return RedirectToAction(nameof(Index));
         }
+
     }
 }
 

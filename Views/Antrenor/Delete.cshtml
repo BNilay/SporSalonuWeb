@@ -10,6 +10,15 @@
     Bu antrenörü silmek istediğinize emin misiniz?
 </div>
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+        
+    </div>
+}
+
+
 <dl class="row">
     <dt class="col-sm-3">Ad Soyad</dt>
     <dd class="col-sm-9">@Model.AdSoyad</dd>

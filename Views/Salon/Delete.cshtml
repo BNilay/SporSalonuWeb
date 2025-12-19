@@ -3,6 +3,13 @@
 <h2>Salon Sil</h2>
 
 <h4>@Model.SalonAdi silinsin mi?</h4>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
 
 <form asp-action="Delete">
     <input type="hidden" asp-for="SalonId" />

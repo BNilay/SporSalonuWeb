@@ -24,5 +24,9 @@ namespace yeniWeb.Models.ViewModels
 
         public string? Equipment { get; set; }
         public string? Notes { get; set; }
+
+        public IFormFile? Photo { get; set; }
+
+
     }
 }

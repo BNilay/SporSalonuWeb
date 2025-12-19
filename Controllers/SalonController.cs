@@ -121,20 +121,45 @@ namespace yeniWeb.Controllers
 
             return View(salon);
         }
-
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id) 
-        {
-            var salon = await _context.Salonlar.FindAsync(id);
-            if(salon != null) 
-            {
-                _context.Salonlar.Remove(salon);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("Index");
-        }
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> DeleteConfirmed(int id)
+{
+    var antrenorVarMi = await _context.Antrenorler
+        .AnyAsync(a => a.SalonId == id);
 
+    if (antrenorVarMi)
+    {
+        TempData["Error"] = "Bu salona bağlı antrenörler var. Önce antrenörleri silmelisiniz.";
+        return RedirectToAction(nameof(Delete), new { id });
+    }
+
+    var hizmetVarMi = await _context.Hizmetler
+        .AnyAsync(h => h.SalonId == id);
+
+    if (hizmetVarMi)
+    {
+        TempData["Error"] = "Bu salona bağlı hizmetler var. Önce hizmetleri silmelisiniz.";
+        return RedirectToAction(nameof(Delete), new { id });
+    }
+
+    var randevuVarMi = await _context.Randevular
+        .AnyAsync(r => r.Antrenor.Salon.SalonId == id);
+
+    if (randevuVarMi)
+    {
+        TempData["Error"] = "Bu salona bağlı randevular var. Önce randevuları silmelisiniz.";
+        return RedirectToAction(nameof(Delete), new { id });
+    }
+
+    var salon = await _context.Salonlar.FindAsync(id);
+    if (salon == null) return NotFound();
+
+    _context.Salonlar.Remove(salon);
+    await _context.SaveChangesAsync();
+
+    return RedirectToAction(nameof(Index));
+}
 
 
 

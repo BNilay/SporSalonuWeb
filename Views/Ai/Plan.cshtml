@@ -1,4 +1,5 @@
-﻿@model yeniWeb.Models.ViewModels.PlanRequestVm
+﻿```cshtml
+@model yeniWeb.Models.ViewModels.PlanRequestVm
 
 @{
     ViewData["Title"] = "AI Plan Oluştur";
@@ -15,8 +16,19 @@
                         🤖 AI Plan Oluştur (Gemini)
                     </h3>
 
-                    <form asp-action="Plan" method="post">
+                    <form asp-action="Plan" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label">Fotoğraf (opsiyonel)</label>
+                            <input asp-for="Photo" type="file" class="form-control" accept="image/*" id="photoInput" />
+                            <span asp-validation-for="Photo" class="text-danger small"></span>
+                            <div class="form-text">Ön/yan açıdan, aydınlık bir ortamda çekilmiş fotoğraf daha iyi sonuç verir.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <img id="photoPreview" class="img-fluid rounded shadow-sm" style="display:none; max-height: 320px; object-fit: cover; width: 100%;" />
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Yaş</label>
@@ -77,8 +89,7 @@
                                       placeholder="Varsa özel notlarınız"></textarea>
                         </div>
 
-                        <button id="btnSubmit" type="submit"
-                                class="btn btn-primary w-100 btn-lg">
+                        <button id="btnSubmit" type="submit" class="btn btn-primary w-100 btn-lg">
                             Planı Oluştur
                         </button>
                     </form>
@@ -96,6 +107,19 @@
     <script>
         const form = document.querySelector("form");
         const btn = document.getElementById("btnSubmit");
+        const input = document.getElementById("photoInput");
+        const img = document.getElementById("photoPreview");
+
+        input.addEventListener("change", function () {
+            const file = this.files && this.files[0];
+            if (!file) {
+                img.style.display = "none";
+                img.src = "";
+                return;
+            }
+            img.src = URL.createObjectURL(file);
+            img.style.display = "block";
+        });
 
         form.addEventListener("submit", function () {
             btn.disabled = true;
@@ -103,3 +127,4 @@
         });
     </script>
 }
+```

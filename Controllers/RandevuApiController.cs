@@ -28,6 +28,7 @@ namespace yeniWeb.Controllers
                 .OrderByDescending(r => r.RandevuTarihi)
                 .Select(r => new
                 {
+                    r.Uye.AdSoyad,
                     r.Id,
                     r.RandevuTarihi,
                     r.SureDakika,
