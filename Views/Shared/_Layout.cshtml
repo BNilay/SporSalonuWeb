@@ -1,81 +1,118 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - yeniWeb</title>
+    <title>@ViewData["Title"] - Spor Salonu</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/yeniWeb.styles.css" asp-append-version="true" />
 
+    <!-- Bootstrap Icons (premium ikonlar) -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Spor Salonu</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 main-navbar">
+            <div class="container">
+
+               
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2"
+                   asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-barbell text-primary fs-4"></i>
+
+                       Spor Salonu
+                </a>
+
+           
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Menüyü Aç/Kapat">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Antrenor" asp-action="Index">Antrenör</a>
+                                    <a class="nav-link" asp-controller="Antrenor" asp-action="Index">
+                                        Antrenör
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Hizmet" asp-action="Index">Hizmet</a>
+                                    <a class="nav-link" asp-controller="Hizmet" asp-action="Index">
+                                        Hizmet
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Salon" asp-action="Index">Salon</a>
+                                    <a class="nav-link" asp-controller="Salon" asp-action="Index">
+                                        Salon
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="Index">Randevu</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="/api/uyeler" target="_blank">Uyeler</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="/api/randevular" target="_blank">Randevular</a>
+                                    <a class="nav-link" asp-controller="Randevu" asp-action="Index">
+                                        Randevu
+                                    </a>
                                 </li>
 
-
+                             
+                                <li class="nav-item ms-lg-3">
+                                    <a class="nav-link nav-pill"
+                                       href="/api/uyeler"
+                                       target="_blank"
+                                       rel="noopener">
+                                        <i class="bi bi-code-slash me-1"></i> Üyeler API
+                                    </a>
+                                </li>
+                                <li class="nav-item ms-lg-2">
+                                    <a class="nav-link nav-pill"
+                                       href="/api/randevular"
+                                       target="_blank"
+                                       rel="noopener">
+                                        <i class="bi bi-code-slash me-1"></i> Randevular API
+                                    </a>
+                                </li>
                             }
                             else if (User.IsInRole("User"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="Index">Randevu</a>
+                                    <a class="nav-link" asp-controller="Randevu" asp-action="Index">
+                                        Randevu
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ai" asp-action="Plan">Akıllı asistan</a>
+                                    <a class="nav-link" asp-controller="Ai" asp-action="Plan">
+                                        Akıllı Asistan
+                                    </a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
+                                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                        Anasayfa
+                                    </a>
                                 </li>
                             }
                         }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
-                            </li>
-                        }
-
                     </ul>
 
-                    <partial name="_LoginPartial" />
+                  
+                    <div class="d-flex align-items-center gap-2">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
@@ -85,9 +122,9 @@
         @RenderBody()
     </main>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - yeniWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container text-center small">
+            &copy; 2025 - Spor Salonu
         </div>
     </footer>
 

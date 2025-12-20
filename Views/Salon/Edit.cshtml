@@ -1,22 +1,57 @@
 ﻿@model yeniWeb.Models.Salon
 
-<h2>Salon Düzenle</h2>
+@{
+    ViewData["Title"] = "Salon Düzenle";
+}
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="SalonId" />
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-    <div class="form-group">
-        <label asp-for="SalonAdi"></label>
-        <input asp-for="SalonAdi" class="form-control" />
-        <span asp-validation-for="SalonAdi" class="text-danger"></span>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Salon Düzenle</h2>
+                    <div class="text-muted">Salon bilgilerini güncelleyin.</div>
+                </div>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Geri
+                </a>
+            </div>
+
+            <form asp-action="Edit" method="post" class="row g-3">
+                <input type="hidden" asp-for="SalonId" />
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="col-12">
+                    <label asp-for="SalonAdi" class="form-label"></label>
+                    <input asp-for="SalonAdi" class="form-control" />
+                    <span asp-validation-for="SalonAdi" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="CalismaSaatleri" class="form-label"></label>
+                    <input asp-for="CalismaSaatleri" class="form-control" />
+                    <span asp-validation-for="CalismaSaatleri" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+                    <button type="submit" class="btn btn-primary">
+                        Güncelle
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        İptal
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="CalismaSaatleri"></label>
-        <input asp-for="CalismaSaatleri" class="form-control" />
-        <span asp-validation-for="CalismaSaatleri" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Güncelle</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Geri</a>
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

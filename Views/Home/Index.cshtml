@@ -3,7 +3,26 @@
 }
 
 <div class="home-hero">
-    <div class="container text-center">
-        <h1 class="display-4 fw-bold">Spor Salonumuza Hoş Geldiniz!</h1>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Spor Salonumuza Hoş Geldiniz!
+        </h1>
+
+        <p class="lead mb-4" >
+            Uzman antrenörler, esnek randevu saatleri ve
+            kişiye özel programlarla hedefinize ulaşın.
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a asp-area="Identity"
+               asp-page="/Account/Register"
+               class="btn btn-primary btn-lg rounded-pill px-4">
+                Kayıt Ol
+            </a>
+
+           
+        </div>
     </div>
 </div>

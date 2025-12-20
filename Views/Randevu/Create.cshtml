@@ -5,55 +5,69 @@
     ViewData["Title"] = "Yeni Randevu";
 }
 
-<h2>Yeni Randevu</h2>
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Yeni Randevu</h2>
+                    <div class="text-muted">Antrenör, hizmet ve tarih-saat bilgilerini seçin.</div>
+                </div>
 
+                <a asp-action="Index" class="btn btn-secondary">
+                    Geri
+                </a>
+            </div>
 
-    <div class="form-group mb-2">
-        <label>Antrenör</label>
-        <select asp-for="AntrenorId"
-                asp-items="(SelectList)ViewBag.Antrenorler"
-                class="form-control">
-            <option value="">Antrenör seçiniz</option>
-        </select>
-        <span asp-validation-for="AntrenorId" class="text-danger"></span>
+            <form asp-action="Create" method="post" class="row g-3">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="col-12">
+                    <label class="form-label">Antrenör</label>
+                    <select asp-for="AntrenorId"
+                            asp-items="(SelectList)ViewBag.Antrenorler"
+                            class="form-select">
+                        <option value="">Antrenör seçiniz</option>
+                    </select>
+                    <span asp-validation-for="AntrenorId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Hizmet</label>
+                    <select asp-for="HizmetId"
+                            asp-items="(SelectList)ViewBag.Hizmetler"
+                            class="form-select">
+                        <option value="">Hizmet seçiniz</option>
+                    </select>
+                    <span asp-validation-for="HizmetId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Tarih</label>
+                    <input asp-for="Tarih" type="date" class="form-control" />
+                    <span asp-validation-for="Tarih" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Başlangıç Saati</label>
+                    <input asp-for="BaslangicSaati" type="time" class="form-control" />
+                    <span asp-validation-for="BaslangicSaati" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+                    <button type="submit" class="btn btn-primary">
+                        Kaydet
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        İptal
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
-
-    
-    <div class="form-group mb-2">
-        <label>Hizmet</label>
-        <select asp-for="HizmetId"
-                asp-items="(SelectList)ViewBag.Hizmetler"
-                class="form-control">
-            <option value="">Hizmet seçiniz</option>
-        </select>
-        <span asp-validation-for="HizmetId" class="text-danger"></span>
-    </div>
-
-    
-    <div class="form-group mb-2">
-        <label>Tarih</label>
-        <input asp-for="Tarih" type="date" class="form-control" />
-        <span asp-validation-for="Tarih" class="text-danger"></span>
-    </div>
-
-    
-    <div class="form-group mb-3">
-        <label>Başlangıç Saati</label>
-        <input asp-for="BaslangicSaati" type="time" class="form-control" />
-        <span asp-validation-for="BaslangicSaati" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">
-        Kaydet
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Geri
-    </a>
-</form>
+</div>
 
 @section Scripts {
     @{

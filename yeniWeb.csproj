@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\images\agırlık.png" />
     <None Include="wwwroot\images\salon2.jpg" />
   </ItemGroup>
 

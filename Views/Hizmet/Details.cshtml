@@ -4,22 +4,53 @@
     ViewData["Title"] = "Hizmet Detay";
 }
 
-<h2>Hizmet Detay</h2>
-<hr />
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-<dl class="row">
-    <dt class="col-sm-2">Hizmet Adı</dt>
-    <dd class="col-sm-10">@Model.HizmetAdi</dd>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Hizmet Detayı</h2>
+                    <div class="text-muted">Hizmet bilgilerini görüntüleyin.</div>
+                </div>
 
-    <dt class="col-sm-2">Fiyat</dt>
-    <dd class="col-sm-10">@Model.Fiyat</dd>
+                <a asp-action="Index" class="btn btn-secondary">
+                    Geri
+                </a>
+            </div>
 
-    <dt class="col-sm-2">Süre (dk)</dt>
-    <dd class="col-sm-10">@Model.HizmetSuresi</dd>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <tbody>
+                        <tr>
+                            <th style="width: 180px;">Hizmet Adı</th>
+                            <td class="fw-semibold">@Model.HizmetAdi</td>
+                        </tr>
+                        <tr>
+                            <th>Fiyat</th>
+                            <td>@Model.Fiyat</td>
+                        </tr>
+                        <tr>
+                            <th>Süre (dk)</th>
+                            <td>@Model.HizmetSuresi</td>
+                        </tr>
+                        <tr>
+                            <th>Salon</th>
+                            <td>@(Model.Salon?.SalonAdi ?? "-")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <dt class="col-sm-2">Salon</dt>
-    <dd class="col-sm-10">@Model.Salon?.SalonAdi</dd>
-</dl>
+            <div class="d-flex gap-2 justify-content-end mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.HizmetId" class="btn btn-warning">
+                    Düzenle
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    Kapat
+                </a>
+            </div>
 
-<a asp-action="Edit" asp-route-id="@Model.HizmetId" class="btn btn-warning">Düzenle</a>
-<a asp-action="Index" class="btn btn-secondary">Geri</a>
+        </div>
+    </div>
+</div>

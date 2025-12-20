@@ -4,50 +4,75 @@
     ViewData["Title"] = "Antrenörler";
 }
 
-<h2>Antrenörler</h2>
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Yeni Antrenör</a>
-</p>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Antrenörler</h2>
+                    <div class="text-muted">Kayıtlı antrenörleri görüntüleyin ve yönetin.</div>
+                </div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Ad Soyad</th>
-            <th>Uzmanlık</th>
-            <th>Salon</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var a in Model)
-        {
-            <tr>
-                <td>@a.AdSoyad</td>
-                <td>@a.UzmanlikAlanlari</td>
-                <td>@a.Salon?.SalonAdi</td>
-                <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@a.Id"
-                       class="btn btn-warning btn-sm">
-                        Düzenle
-                    </a>
+                <a asp-action="Create" class="btn btn-primary">
+                    Yeni Antrenör
+                </a>
+            </div>
 
-                    <a asp-action="Delete"
-                       asp-route-id="@a.Id"
-                       class="btn btn-danger btn-sm">
-                        Sil
-                    </a>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Uzmanlık</th>
+                            <th>Salon</th>
+                            <th class="text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@a.AdSoyad</td>
+                                <td>@a.UzmanlikAlanlari</td>
+                                <td>@(a.Salon?.SalonAdi ?? "-")</td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group" aria-label="İşlemler">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@a.Id"
+                                           class="btn btn-warning btn-sm">
+                                            Düzenle
+                                        </a>
 
-                    <a asp-controller="AntrenorMusaitlik"
-                       asp-action="Index"
-                       asp-route-antrenorId="@a.Id"
-                       class="btn btn-secondary btn-sm">
-                        Müsaitlik
-                    </a>
-                </td>
+                                        <a asp-action="Delete"
+                                           asp-route-id="@a.Id"
+                                           class="btn btn-danger btn-sm">
+                                            Sil
+                                        </a>
 
-            </tr>
-        }
-    </tbody>
-</table>
+                                        <a asp-controller="AntrenorMusaitlik"
+                                           asp-action="Index"
+                                           asp-route-antrenorId="@a.Id"
+                                           class="btn btn-secondary btn-sm">
+                                            Müsaitlik
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    Henüz antrenör kaydı yok.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

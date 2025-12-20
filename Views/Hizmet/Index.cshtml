@@ -4,36 +4,76 @@
     ViewData["Title"] = "Hizmetler";
 }
 
-<h2>Hizmetler</h2>
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Yeni Hizmet Ekle</a>
-</p>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Hizmetler</h2>
+                    <div class="text-muted">Kayıtlı hizmetleri görüntüleyin ve yönetin.</div>
+                </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Hizmet Adı</th>
-            <th>Fiyat</th>
-            <th>Süre (saat)</th>
-            <th>Salon</th>
-            <th>İşlemler</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var h in Model)
-        {
-            <tr>
-                <td>@h.HizmetAdi</td>
-                <td>@h.Fiyat</td>
-                <td>@h.HizmetSuresi</td>
-                <td>@h.Salon?.SalonAdi</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@h.HizmetId" class="btn btn-info btn-sm">Detay</a>
-                    <a asp-action="Edit" asp-route-id="@h.HizmetId" class="btn btn-warning btn-sm">Düzenle</a>
-                    <a asp-action="Delete" asp-route-id="@h.HizmetId" class="btn btn-danger btn-sm">Sil</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                <a asp-action="Create" class="btn btn-primary">
+                    Yeni Hizmet Ekle
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Hizmet Adı</th>
+                            <th>Fiyat</th>
+                            <th>Süre (dk)</th>
+                            <th>Salon</th>
+                            <th class="text-end" style="width: 260px;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@h.HizmetAdi</td>
+                                <td>@h.Fiyat</td>
+                                <td>@h.HizmetSuresi</td>
+                                <td>@(h.Salon?.SalonAdi ?? "-")</td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group" aria-label="İşlemler">
+                                        <a asp-action="Details"
+                                           asp-route-id="@h.HizmetId"
+                                           class="btn btn-info btn-sm">
+                                            Detay
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@h.HizmetId"
+                                           class="btn btn-warning btn-sm">
+                                            Düzenle
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@h.HizmetId"
+                                           class="btn btn-danger btn-sm">
+                                            Sil
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    Henüz hizmet kaydı yok.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

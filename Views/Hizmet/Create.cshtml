@@ -1,43 +1,68 @@
 ﻿@model yeniWeb.Models.Hizmet
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Yeni Hizmet Ekle";
 }
 
-<h2>Yeni Hizmet Ekle</h2>
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+<div class="page-bg">
+    <div class="container">
+        <div class="content-card">
 
-    <div class="form-group">
-        <label asp-for="HizmetAdi"></label>
-        <input asp-for="HizmetAdi" class="form-control" />
-        <span asp-validation-for="HizmetAdi" class="text-danger"></span>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h2 class="mb-1">Yeni Hizmet</h2>
+                    <div class="text-muted">Yeni bir hizmet kaydı oluşturun.</div>
+                </div>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Geri
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post" class="row g-3">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="col-12">
+                    <label asp-for="HizmetAdi" class="form-label"></label>
+                    <input asp-for="HizmetAdi" class="form-control" />
+                    <span asp-validation-for="HizmetAdi" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Fiyat" class="form-label"></label>
+                    <input asp-for="Fiyat" class="form-control" />
+                    <span asp-validation-for="Fiyat" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="HizmetSuresi" class="form-label"></label>
+                    <input asp-for="HizmetSuresi" class="form-control" />
+                    <span asp-validation-for="HizmetSuresi" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Salon</label>
+                    @Html.DropDownListFor(m => m.SalonId,
+                             (SelectList)ViewBag.SalonId,
+                             "Salon seçiniz",
+                             new { @class = "form-select" })
+                    <span asp-validation-for="SalonId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+                    <button type="submit" class="btn btn-primary">
+                        Kaydet
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        İptal
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Fiyat"></label>
-        <input asp-for="Fiyat" class="form-control" />
-        <span asp-validation-for="Fiyat" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HizmetSuresi"></label>
-        <input asp-for="HizmetSuresi" class="form-control" />
-        <span asp-validation-for="HizmetSuresi" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Salon</label>
-        @Html.DropDownListFor(m => m.SalonId,
-                 (SelectList)ViewBag.SalonId,
-                 "Salon seçiniz",
-                 new { @class = "form-control" })
-        <span asp-validation-for="SalonId" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success mt-3">Kaydet</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Geri</a>
-</form>
+</div>
 
 @section Scripts {
     @{
